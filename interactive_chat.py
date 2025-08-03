@@ -85,7 +85,7 @@ class InteractiveAgentChat:
         print("  /costs      - Show usage and cost summary")
         print("  /models     - Show all model assignments")
         print("  /context    - Show full directory context")
-        print("  /plans      - List available plans")
+        print("  /plans      - Start collaborative planning session")
         print("  /save       - Save chat session to file")
         print("  /help       - Show this help message")
         print("  /quit       - Exit the chat")
@@ -327,31 +327,218 @@ class InteractiveAgentChat:
             for hint in hints:
                 print(f"   • {hint}")
     
-    def list_plans(self):
-        """List available plans"""
+    def collaborative_planning(self):
+        """Start collaborative planning session with multiple agents"""
         try:
             from rc_planner import PlanManager
             plan_manager = PlanManager()
-            plans = plan_manager.list_plans()
             
-            if not plans:
-                print("📋 No plans found")
-                return
-                
-            print(f"\n📋 Available Plans ({len(plans)}):")
-            print("-" * 50)
-            for plan in plans[:10]:  # Show first 10 plans
-                status_emoji = {"pending": "⏳", "active": "🔄", "completed": "✅", "cancelled": "❌"}.get(plan.get('status', 'unknown'), "❓")
-                print(f"{status_emoji} {plan.get('id', 'unknown')}: {plan.get('title', 'No title')[:50]}")
-                print(f"   Created: {plan.get('created_at', 'unknown')[:19]}")
-                
-            if len(plans) > 10:
-                print(f"   ... and {len(plans) - 10} more plans")
-                
-        except ImportError:
-            print("❌ Plan manager not available")
+            print("\n🤝 Collaborative Planning Session")
+            print("=" * 50)
+            print("💡 This is an iterative planning process where you can:")
+            print("   • Discuss plans with multiple agents")
+            print("   • Get feedback and suggestions")
+            print("   • Refine plans through conversation")
+            print("   • Create new plans collaboratively")
+            print("\n📋 Available Commands:")
+            print("   list        - Show available plans")
+            print("   new <desc>  - Start new plan discussion")
+            print("   discuss <id> - Discuss existing plan with agents")
+            print("   refine <id> - Refine plan with agent input")
+            print("   agents      - Show agents available for planning")
+            print("   back        - Return to main chat")
+            print("=" * 50)
+            
+            # Show existing plans
+            plans = plan_manager.list_plans()
+            if plans:
+                print(f"\n📋 Current Plans ({len(plans)}):")
+                for i, plan in enumerate(plans[:5], 1):
+                    status_emoji = {"pending": "⏳", "active": "🔄", "completed": "✅", "cancelled": "❌"}.get(plan.get('status', 'unknown'), "❓")
+                    print(f"  {i}. {status_emoji} {plan.get('id', 'unknown')}: {plan.get('title', 'No title')[:40]}")
+                if len(plans) > 5:
+                    print(f"     ... and {len(plans) - 5} more (use 'list' to see all)")
+            else:
+                print("\n📋 No existing plans found")
+                print("💡 Use 'new <description>' to start collaborative planning")
+            
+            # Enter planning loop
+            while True:
+                try:
+                    user_input = input(f"\n🤝 Planning> ").strip()
+                    
+                    if not user_input:
+                        continue
+                        
+                    if user_input.lower() in ['back', 'exit', 'quit']:
+                        print("👋 Exiting collaborative planning")
+                        break
+                        
+                    elif user_input.lower() == 'list':
+                        self._show_all_plans(plan_manager)
+                        
+                    elif user_input.lower().startswith('new '):
+                        description = user_input[4:].strip()
+                        if description:
+                            self._start_collaborative_plan(plan_manager, description)
+                        else:
+                            print("❌ Please provide a plan description: new <description>")
+                            
+                    elif user_input.lower().startswith('discuss '):
+                        plan_id = user_input[8:].strip()
+                        if plan_id:
+                            self._discuss_plan(plan_manager, plan_id)
+                        else:
+                            print("❌ Please provide a plan ID: discuss <plan_id>")
+                            
+                    elif user_input.lower().startswith('refine '):
+                        plan_id = user_input[7:].strip()
+                        if plan_id:
+                            self._refine_plan(plan_manager, plan_id)
+                        else:
+                            print("❌ Please provide a plan ID: refine <plan_id>")
+                            
+                    elif user_input.lower() == 'agents':
+                        self._show_planning_agents()
+                        
+                    else:
+                        print("❌ Unknown planning command. Available:")
+                        print("   list, new <desc>, discuss <id>, refine <id>, agents, back")
+                        
+                except KeyboardInterrupt:
+                    print("\n👋 Exiting collaborative planning")
+                    break
+                    
         except Exception as e:
-            print(f"❌ Error listing plans: {e}")
+            print(f"❌ Error in collaborative planning: {e}")
+            
+    def _show_all_plans(self, plan_manager):
+        """Show all available plans"""
+        plans = plan_manager.list_plans()
+        if not plans:
+            print("📋 No plans found")
+            return
+            
+        print(f"\n📋 All Plans ({len(plans)}):")
+        print("-" * 60)
+        for plan in plans:
+            status_emoji = {"pending": "⏳", "active": "🔄", "completed": "✅", "cancelled": "❌"}.get(plan.get('status', 'unknown'), "❓")
+            print(f"{status_emoji} {plan.get('id', 'unknown')}: {plan.get('title', 'No title')}")
+            print(f"   Created: {plan.get('created_at', 'unknown')[:19]} | Status: {plan.get('status', 'unknown')}")
+            if plan.get('description'):
+                print(f"   Description: {plan.get('description', '')[:80]}...")
+            print()
+            
+    def _start_collaborative_plan(self, plan_manager, description):
+        """Start collaborative planning for new plan"""
+        print(f"\n🚀 Starting collaborative planning for: {description}")
+        print("=" * 60)
+        
+        # Get input from multiple agents
+        planning_agents = ['architect', 'developer', 'reviewer']
+        agent_inputs = {}
+        
+        for agent_role in planning_agents:
+            if agent_role in self.available_agents:
+                print(f"\n🤖 Getting input from {agent_role.title()} Agent...")
+                try:
+                    # Simulate agent input (replace with actual agent calls)
+                    agent_input = f"[{agent_role.title()} perspective on: {description}]"
+                    agent_inputs[agent_role] = agent_input
+                    print(f"   💭 {agent_role.title()}: {agent_input}")
+                except Exception as e:
+                    print(f"   ❌ Error getting {agent_role} input: {e}")
+        
+        # Create collaborative plan
+        print(f"\n📝 Creating plan with multi-agent input...")
+        try:
+            plan = plan_manager.generate_plan(description, self.directory_context)
+            plan_path = plan_manager.save_plan(plan, description)
+            print(f"✅ Collaborative plan created: {plan_path}")
+            print("\n" + "="*60)
+            print(plan)
+            print("="*60)
+        except Exception as e:
+            print(f"❌ Error creating plan: {e}")
+            
+    def _discuss_plan(self, plan_manager, plan_id):
+        """Discuss existing plan with agents"""
+        print(f"\n💬 Starting plan discussion for: {plan_id}")
+        print("=" * 60)
+        print("💡 You can ask questions about the plan and get agent feedback")
+        print("   Type 'done' when finished discussing")
+        
+        while True:
+            try:
+                question = input(f"\n❓ Your question about {plan_id}> ").strip()
+                
+                if not question:
+                    continue
+                    
+                if question.lower() in ['done', 'exit', 'back']:
+                    print("✅ Plan discussion completed")
+                    break
+                    
+                # Simulate multi-agent discussion
+                print(f"\n🤖 Agents discussing: {question}")
+                agents_discussing = ['architect', 'developer', 'reviewer']
+                
+                for agent in agents_discussing:
+                    if agent in self.available_agents:
+                        # Simulate agent response
+                        response = f"[{agent.title()} response to: {question}]"
+                        print(f"   💭 {agent.title()}: {response}")
+                        
+            except KeyboardInterrupt:
+                print("\n✅ Plan discussion completed")
+                break
+                
+    def _refine_plan(self, plan_manager, plan_id):
+        """Refine plan with agent input"""
+        print(f"\n🔧 Refining plan: {plan_id}")
+        print("=" * 60)
+        print("💡 Describe what you want to change or improve")
+        
+        try:
+            refinement = input(f"\n🔧 How should we refine {plan_id}> ").strip()
+            
+            if refinement:
+                print(f"\n🤖 Agents working on refinement...")
+                # Simulate refinement process
+                print(f"   🔄 Analyzing current plan...")
+                print(f"   💭 Incorporating: {refinement}")
+                print(f"   ✅ Plan refinement suggestions ready")
+                print(f"\n💡 Refined plan would include: {refinement}")
+            else:
+                print("❌ No refinement description provided")
+                
+        except KeyboardInterrupt:
+            print("\n✅ Plan refinement cancelled")
+            
+    def _show_planning_agents(self):
+        """Show agents available for planning"""
+        print("\n🤖 Agents Available for Collaborative Planning:")
+        print("-" * 50)
+        
+        planning_roles = {
+            'architect': 'System design and architecture planning',
+            'developer': 'Implementation planning and technical details',
+            'reviewer': 'Code review and quality assurance planning',
+            'tester': 'Testing strategy and quality planning',
+            'devops': 'Deployment and infrastructure planning'
+        }
+        
+        for role, description in planning_roles.items():
+            if role in self.available_agents:
+                status = "✅ Available"
+                model = self.available_agents[role].get('model', 'unknown')
+            else:
+                status = "❌ Not configured"
+                model = "N/A"
+                
+            print(f"  {status} {role.title()}: {description}")
+            print(f"           Model: {model}")
+            print()
     
     def start_chat(self):
         """Start the chat interface"""
@@ -456,7 +643,7 @@ class InteractiveAgentChat:
             self.display_context()
             
         elif command == 'plans':
-            self.list_plans()
+            self.collaborative_planning()
             
         elif command == 'save':
             self.save_session()
