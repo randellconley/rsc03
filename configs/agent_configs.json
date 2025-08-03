@@ -1,0 +1,141 @@
+{
+  "project_orchestrator": {
+    "role": "Project Orchestrator & Technical Lead",
+    "goal": "Define project scope, break down requirements, coordinate team efforts, and ensure deliverable quality",
+    "llm_model": "gpt-4",
+    "specializations": [
+      "project_management",
+      "coordination",
+      "planning",
+      "quality_assurance"
+    ],
+    "delegation_capability": true,
+    "coordination_role": true,
+    "max_concurrent_tasks": 5,
+    "workflow_stages": [
+      "analysis",
+      "review"
+    ]
+  },
+  "research_analyst": {
+    "role": "Technical Research Specialist",
+    "goal": "Research technologies, analyze existing codebases, and provide technical recommendations",
+    "llm_model": "gpt-4",
+    "specializations": [
+      "technology_research",
+      "code_analysis",
+      "best_practices",
+      "emerging_technologies"
+    ],
+    "delegation_capability": false,
+    "coordination_role": false,
+    "max_concurrent_tasks": 3,
+    "workflow_stages": [
+      "analysis"
+    ]
+  },
+  "solution_architect": {
+    "role": "Solution Architect & Designer",
+    "goal": "Design technical solutions, create system architecture, and define implementation strategies",
+    "llm_model": "gpt-4",
+    "specializations": [
+      "system_design",
+      "architecture",
+      "technical_specifications",
+      "scalability"
+    ],
+    "delegation_capability": false,
+    "coordination_role": false,
+    "max_concurrent_tasks": 2,
+    "workflow_stages": [
+      "architecture"
+    ]
+  },
+  "code_implementer": {
+    "role": "Senior Software Developer",
+    "goal": "Implement solutions, write high-quality code, and integrate components",
+    "llm_model": "gpt-4",
+    "specializations": [
+      "full_stack_development",
+      "coding",
+      "integration",
+      "debugging"
+    ],
+    "delegation_capability": false,
+    "coordination_role": false,
+    "max_concurrent_tasks": 3,
+    "workflow_stages": [
+      "implementation"
+    ]
+  },
+  "quality_assurance": {
+    "role": "Quality Assurance Engineer",
+    "goal": "Review code quality, test solutions, and ensure reliability",
+    "llm_model": "gpt-4",
+    "specializations": [
+      "testing",
+      "quality_validation",
+      "code_review",
+      "bug_detection"
+    ],
+    "delegation_capability": false,
+    "coordination_role": false,
+    "max_concurrent_tasks": 2,
+    "workflow_stages": [
+      "testing",
+      "review"
+    ]
+  },
+  "technical_writer": {
+    "role": "Technical Documentation Specialist",
+    "goal": "Create comprehensive documentation, user guides, and technical specifications",
+    "llm_model": "gpt-3.5-turbo",
+    "specializations": [
+      "documentation",
+      "technical_writing",
+      "user_guides",
+      "api_docs"
+    ],
+    "delegation_capability": false,
+    "coordination_role": false,
+    "max_concurrent_tasks": 2,
+    "workflow_stages": [
+      "documentation"
+    ]
+  },
+  "infrastructure_specialist": {
+    "role": "Infrastructure Specialist",
+    "goal": "Design deployment, DevOps, and infrastructure solutions",
+    "llm_model": "gpt-3.5-turbo",
+    "specializations": [
+      "deployment",
+      "devops",
+      "infrastructure",
+      "containerization"
+    ],
+    "delegation_capability": false,
+    "coordination_role": false,
+    "max_concurrent_tasks": 2,
+    "workflow_stages": [
+      "deployment"
+    ]
+  },
+  "security_specialist": {
+    "role": "Security Architecture Specialist",
+    "goal": "Design secure, robust authentication and authorization systems",
+    "llm_model": "gpt-4",
+    "specializations": [
+      "security_architecture",
+      "authentication",
+      "authorization",
+      "compliance"
+    ],
+    "delegation_capability": false,
+    "coordination_role": false,
+    "max_concurrent_tasks": 2,
+    "workflow_stages": [
+      "architecture",
+      "review"
+    ]
+  }
+}

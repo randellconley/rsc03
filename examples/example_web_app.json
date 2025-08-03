@@ -1,0 +1,35 @@
+{
+  "project_id": "example_web_app",
+  "project_name": "Example Web Application",
+  "project_type": "web_application",
+  "description": "A simple web application with user authentication to demonstrate the multi-agent system",
+  "requirements": [
+    "User registration and login system",
+    "Secure password handling with hashing",
+    "JWT-based authentication",
+    "Responsive web interface with React",
+    "FastAPI backend with PostgreSQL database",
+    "Comprehensive test coverage",
+    "API documentation",
+    "Deployment configuration"
+  ],
+  "success_criteria": [
+    "Users can register and login successfully",
+    "All API endpoints are secure and functional",
+    "Frontend is responsive and user-friendly",
+    "Test coverage is above 80%",
+    "Complete documentation is available",
+    "Application can be deployed successfully"
+  ],
+  "constraints": {
+    "timeline": "2-3 weeks",
+    "budget": "medium",
+    "team_size": "8 agents",
+    "technology_stack": {
+      "backend": "FastAPI",
+      "frontend": "React",
+      "database": "PostgreSQL",
+      "deployment": "Docker"
+    }
+  }
+}

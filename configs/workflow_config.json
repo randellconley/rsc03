@@ -1,0 +1,16 @@
+{
+  "default_workflow": "web_application",
+  "available_workflows": [
+    "web_application",
+    "api_service",
+    "custom"
+  ],
+  "delegation_timeout": 300,
+  "max_delegation_depth": 3,
+  "parallel_execution": true,
+  "quality_gates": {
+    "code_review_required": true,
+    "testing_required": true,
+    "documentation_required": true
+  }
+}
