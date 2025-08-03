@@ -25,6 +25,19 @@ cd /home/ubuntu/environment/rsc03
 python start_team.py
 ```
 
+### Step 4: Start Interactive CLI Chat
+```bash
+cd /home/ubuntu/environment/rsc03
+python interactive_chat.py
+```
+
+This provides an interactive command-line interface where you can:
+- Chat directly with any of the 8 specialized agents
+- Switch between agents with `/switch <agent>`
+- View usage costs and statistics
+- Access structured workflows
+- See chat history and agent status
+
 ## 📁 Directory Structure After Setup
 
 ```
