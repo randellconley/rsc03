@@ -23,6 +23,8 @@ class ProjectOrchestratorAgent:
     def __init__(self):
         self.agent_name = "project_orchestrator"
         self.role = "Project Orchestrator & Technical Lead"
+        self.model = "gpt-4"
+        self.api_key = os.getenv('OPENAI_API_KEY')
         self.specializations = [
             "project_management",
             "requirement_analysis", 

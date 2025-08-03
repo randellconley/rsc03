@@ -29,23 +29,58 @@ RSC03 implements a sophisticated multi-agent system using **OpenHands framework*
 - **Collaborative Development**: True multi-agent software development team
 - **Cost Optimization**: Different LLMs per agent based on complexity needs
 
+## 🤖 Agent Specializations
+
+RSC03 includes 8 specialized agents, each optimized for specific aspects of software development with strategically assigned AI models:
+
+1. **Project Orchestrator** (GPT-4) - Coordinates team efforts and manages project workflow
+2. **Research Analyst** (Gemini Pro) - Researches technologies and analyzes requirements  
+3. **Solution Architect** (GPT-4) - Designs system architecture and technical specifications
+4. **Code Implementer** (DeepSeek Coder) - Writes and implements code solutions
+5. **Quality Assurance** (Claude) - Tests solutions and ensures code quality
+6. **Technical Writer** (GPT-3.5-turbo) - Creates documentation and user guides
+7. **Infrastructure Specialist** (GPT-3.5-turbo) - Handles deployment and DevOps
+8. **Security Specialist** (Claude) - Ensures security and compliance
+
+## 🧠 Multi-Model AI Distribution
+
+RSC03 leverages the unique strengths of different AI models for optimal performance:
+
+### Premium Models (Complex Reasoning)
+- **GPT-4**: Project coordination, system architecture
+- **Claude**: Code analysis, security, quality assurance
+
+### Balanced Models (Research & Analysis)  
+- **Gemini Pro**: Technology research, competitive analysis
+
+### Efficient Models (High-Volume Tasks)
+- **GPT-3.5-turbo**: Documentation, infrastructure automation
+- **DeepSeek Coder**: Specialized code generation
+
+This strategic distribution optimizes for quality, performance, and cost-effectiveness.
+
 ## Directory Structure
 
 ```
 rsc03/
 ├── agents/                 # OpenHands agent configurations
-│   ├── project_orchestrator.py
-│   ├── research_analyst.py
-│   ├── solution_architect.py
-│   ├── code_implementer.py
-│   ├── quality_assurance.py
-│   ├── technical_writer.py
-│   ├── infrastructure_specialist.py
-│   └── security_specialist.py
+│   ├── project_orchestrator.py    # GPT-4 (coordination)
+│   ├── research_analyst.py        # Gemini Pro (research)
+│   ├── solution_architect.py      # GPT-4 (architecture)
+│   ├── code_implementer.py        # DeepSeek Coder (coding)
+│   ├── quality_assurance.py       # Claude (QA & testing)
+│   ├── technical_writer.py        # GPT-3.5-turbo (docs)
+│   ├── infrastructure_specialist.py # GPT-3.5-turbo (DevOps)
+│   └── security_specialist.py     # Claude (security)
 ├── workflows/              # Multi-agent workflow definitions
-├── configs/                # Agent-specific configurations
+├── configs/                # Agent and model configurations
+│   ├── agent_configs.json
+│   └── model_config.json
+├── utils/                  # Utility modules
+│   └── model_manager.py    # Multi-model management
 ├── examples/               # Example multi-agent projects
 └── docs/                   # Documentation and guides
+    └── model_distribution_guide.md
 ```
 
 ## OpenHands Integration

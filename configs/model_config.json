@@ -1,0 +1,255 @@
+{
+  "model_assignments": {
+    "project_orchestrator": {
+      "primary_model": "gpt-4",
+      "fallback_model": "gpt-3.5-turbo",
+      "api_provider": "openai",
+      "cost_tier": "premium",
+      "rationale": "Complex coordination and strategic planning require advanced reasoning"
+    },
+    "research_analyst": {
+      "primary_model": "gemini-pro",
+      "fallback_model": "gpt-3.5-turbo",
+      "api_provider": "google",
+      "cost_tier": "balanced",
+      "rationale": "Research and analysis capabilities with good performance-cost ratio"
+    },
+    "solution_architect": {
+      "primary_model": "gpt-4",
+      "fallback_model": "gpt-3.5-turbo",
+      "api_provider": "openai",
+      "cost_tier": "premium",
+      "rationale": "Complex system design and architecture require sophisticated reasoning"
+    },
+    "code_implementer": {
+      "primary_model": "deepseek-coder",
+      "fallback_model": "gpt-3.5-turbo",
+      "api_provider": "deepseek",
+      "cost_tier": "efficient",
+      "rationale": "Specialized code generation with high quality and efficiency"
+    },
+    "quality_assurance": {
+      "primary_model": "claude-3-sonnet-20240229",
+      "fallback_model": "gpt-4",
+      "api_provider": "anthropic",
+      "cost_tier": "premium",
+      "rationale": "Detailed analysis and safety-focused approach for quality assurance"
+    },
+    "technical_writer": {
+      "primary_model": "gpt-3.5-turbo",
+      "fallback_model": "gpt-4",
+      "api_provider": "openai",
+      "cost_tier": "efficient",
+      "rationale": "Cost-effective for high-volume documentation tasks"
+    },
+    "infrastructure_specialist": {
+      "primary_model": "gpt-3.5-turbo",
+      "fallback_model": "gpt-4",
+      "api_provider": "openai",
+      "cost_tier": "efficient",
+      "rationale": "Efficient for automation scripts and deployment procedures"
+    },
+    "security_specialist": {
+      "primary_model": "claude-3-sonnet-20240229",
+      "fallback_model": "gpt-4",
+      "api_provider": "anthropic",
+      "cost_tier": "premium",
+      "rationale": "Safety-focused approach essential for security architecture"
+    }
+  },
+  "model_configurations": {
+    "gpt-4": {
+      "provider": "openai",
+      "endpoint": "https://api.openai.com/v1/chat/completions",
+      "max_tokens": 4096,
+      "temperature": 0.7,
+      "cost_per_1k_tokens": {
+        "input": 0.03,
+        "output": 0.06
+      },
+      "rate_limits": {
+        "requests_per_minute": 500,
+        "tokens_per_minute": 10000
+      },
+      "capabilities": [
+        "complex_reasoning",
+        "strategic_planning",
+        "system_architecture",
+        "problem_decomposition"
+      ]
+    },
+    "gpt-3.5-turbo": {
+      "provider": "openai",
+      "endpoint": "https://api.openai.com/v1/chat/completions",
+      "max_tokens": 4096,
+      "temperature": 0.7,
+      "cost_per_1k_tokens": {
+        "input": 0.0015,
+        "output": 0.002
+      },
+      "rate_limits": {
+        "requests_per_minute": 3500,
+        "tokens_per_minute": 90000
+      },
+      "capabilities": [
+        "general_purpose",
+        "documentation",
+        "routine_tasks",
+        "fast_responses"
+      ]
+    },
+    "claude-3-sonnet-20240229": {
+      "provider": "anthropic",
+      "endpoint": "https://api.anthropic.com/v1/messages",
+      "max_tokens": 4096,
+      "temperature": 0.7,
+      "cost_per_1k_tokens": {
+        "input": 0.003,
+        "output": 0.015
+      },
+      "rate_limits": {
+        "requests_per_minute": 1000,
+        "tokens_per_minute": 80000
+      },
+      "capabilities": [
+        "detailed_analysis",
+        "safety_focused",
+        "code_review",
+        "security_analysis"
+      ]
+    },
+    "gemini-pro": {
+      "provider": "google",
+      "endpoint": "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+      "max_tokens": 2048,
+      "temperature": 0.7,
+      "cost_per_1k_tokens": {
+        "input": 0.00025,
+        "output": 0.0005
+      },
+      "rate_limits": {
+        "requests_per_minute": 60,
+        "tokens_per_minute": 32000
+      },
+      "capabilities": [
+        "research_analysis",
+        "information_synthesis",
+        "comparative_analysis",
+        "multimodal_processing"
+      ]
+    },
+    "deepseek-coder": {
+      "provider": "deepseek",
+      "endpoint": "https://api.deepseek.com/v1/chat/completions",
+      "max_tokens": 4096,
+      "temperature": 0.3,
+      "cost_per_1k_tokens": {
+        "input": 0.0014,
+        "output": 0.0028
+      },
+      "rate_limits": {
+        "requests_per_minute": 300,
+        "tokens_per_minute": 60000
+      },
+      "capabilities": [
+        "code_generation",
+        "algorithm_development",
+        "code_optimization",
+        "technical_problem_solving"
+      ]
+    }
+  },
+  "cost_tiers": {
+    "premium": {
+      "models": ["gpt-4", "claude-3-sonnet-20240229"],
+      "use_cases": ["complex_reasoning", "critical_decisions", "security_analysis"],
+      "budget_allocation": 0.6,
+      "optimization_strategy": "quality_first"
+    },
+    "balanced": {
+      "models": ["gemini-pro"],
+      "use_cases": ["research", "analysis", "evaluation"],
+      "budget_allocation": 0.2,
+      "optimization_strategy": "balanced_performance"
+    },
+    "efficient": {
+      "models": ["gpt-3.5-turbo", "deepseek-coder"],
+      "use_cases": ["documentation", "routine_tasks", "code_generation"],
+      "budget_allocation": 0.2,
+      "optimization_strategy": "cost_effective"
+    }
+  },
+  "fallback_strategy": {
+    "enabled": true,
+    "triggers": [
+      "rate_limit_exceeded",
+      "service_unavailable",
+      "budget_limit_reached",
+      "response_timeout"
+    ],
+    "fallback_chains": {
+      "gpt-4": ["gpt-3.5-turbo"],
+      "claude-3-sonnet-20240229": ["gpt-4", "gpt-3.5-turbo"],
+      "gemini-pro": ["gpt-3.5-turbo"],
+      "deepseek-coder": ["gpt-3.5-turbo"]
+    },
+    "retry_attempts": 3,
+    "backoff_strategy": "exponential"
+  },
+  "monitoring": {
+    "enabled": true,
+    "metrics": [
+      "cost_per_agent",
+      "response_time",
+      "success_rate",
+      "quality_score",
+      "token_usage"
+    ],
+    "alerts": {
+      "budget_threshold": 0.8,
+      "rate_limit_threshold": 0.9,
+      "error_rate_threshold": 0.1
+    },
+    "reporting": {
+      "frequency": "daily",
+      "dashboard_enabled": true,
+      "export_format": "json"
+    }
+  },
+  "optimization": {
+    "auto_scaling": {
+      "enabled": true,
+      "scale_up_threshold": 0.8,
+      "scale_down_threshold": 0.3,
+      "cooldown_period": 300
+    },
+    "caching": {
+      "enabled": true,
+      "ttl": 3600,
+      "cache_size": 1000,
+      "cache_strategy": "lru"
+    },
+    "load_balancing": {
+      "enabled": true,
+      "strategy": "round_robin",
+      "health_check_interval": 60
+    }
+  },
+  "security": {
+    "api_key_rotation": {
+      "enabled": true,
+      "rotation_interval": "30d",
+      "notification_threshold": "7d"
+    },
+    "request_validation": {
+      "enabled": true,
+      "max_request_size": "10MB",
+      "content_filtering": true
+    },
+    "audit_logging": {
+      "enabled": true,
+      "log_level": "info",
+      "retention_period": "90d"
+    }
+  }
+}

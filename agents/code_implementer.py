@@ -24,6 +24,8 @@ class CodeImplementerAgent:
     def __init__(self):
         self.agent_name = "code_implementer"
         self.role = "Senior Software Developer"
+        self.model = "deepseek-coder"
+        self.api_key = os.getenv('DEEPSEEK_API_KEY')
         self.specializations = [
             "full_stack_development",
             "python_development",
