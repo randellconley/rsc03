@@ -13,19 +13,43 @@ This will:
 - Sync the `agents` branch with all multi-model implementations
 - Set up the production environment automatically
 
-### Step 2: Verify Installation
+### Step 2: Setup Environment and API Keys
 ```bash
 cd /home/ubuntu/environment/rsc03
-python -c "from utils.model_manager import ModelManager; print('✅ RSC03 Multi-Agent System Ready!')"
+python setup_env.py
 ```
 
-### Step 3: Test the System
+This will:
+- Check and install required dependencies
+- Create `.env` file from `.env.example`
+- Test the model manager system
+- Show you next steps
+
+### Step 3: Configure API Keys
+Edit the `.env` file with your actual API keys:
+```bash
+cd /home/ubuntu/environment/rsc03
+nano .env
+```
+
+Add your API keys:
+```bash
+# Required for full functionality
+OPENAI_API_KEY=your-actual-openai-key
+ANTHROPIC_API_KEY=your-actual-anthropic-key
+GEMINI_API_KEY=your-actual-gemini-key
+DEEPSEEK_API_KEY=your-actual-deepseek-key
+```
+
+💡 **You can start with just one API key** - the system will use fallback models.
+
+### Step 4: Test the System
 ```bash
 cd /home/ubuntu/environment/rsc03
 python start_team.py
 ```
 
-### Step 4: Start Interactive CLI Chat
+### Step 5: Start Interactive CLI Chat
 ```bash
 cd /home/ubuntu/environment/rsc03
 python interactive_chat.py
@@ -34,9 +58,10 @@ python interactive_chat.py
 This provides an interactive command-line interface where you can:
 - Chat directly with any of the 8 specialized agents
 - Switch between agents with `/switch <agent>`
-- View usage costs and statistics
-- Access structured workflows
-- See chat history and agent status
+- View usage costs and statistics with `/costs`
+- See model assignments with `/models`
+- Access structured workflows with `/workflow`
+- Save chat sessions with `/save`
 
 ## 📁 Directory Structure After Setup
 

@@ -16,6 +16,23 @@ import readline  # For better input handling
 # Add the current directory to Python path
 sys.path.insert(0, str(Path(__file__).parent))
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    
+    # Look for .env file in project root
+    project_root = Path(__file__).parent
+    env_file = project_root / '.env'
+    
+    if env_file.exists():
+        load_dotenv(env_file)
+        print(f"🔑 Loaded API keys from {env_file}")
+    else:
+        print(f"⚠️  No .env file found. Create one from .env.example for API keys")
+        
+except ImportError:
+    print("⚠️  python-dotenv not installed. Install with: pip install python-dotenv")
+
 from utils.model_manager import ModelManager, get_model_for_agent
 from workflows.multi_agent_workflow import MultiAgentWorkflowManager, AgentRole
 
