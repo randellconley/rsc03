@@ -10,7 +10,8 @@ import sys
 import json
 import asyncio
 from pathlib import Path
-from typing import Dict, List, Optional
+from datetime import datetime
+from typing import Dict, List, Optional, Any
 import readline  # For better input handling
 
 # Add the current directory to Python path
@@ -40,11 +41,12 @@ from workflows.multi_agent_workflow import MultiAgentWorkflowManager, AgentRole
 class InteractiveAgentChat:
     """Interactive chat interface for RSC03 multi-agent system"""
     
-    def __init__(self):
+    def __init__(self, directory_context: Dict[str, Any] = None):
         self.model_manager = ModelManager()
         self.workflow_manager = MultiAgentWorkflowManager()
         self.current_agent = None
         self.chat_history = []
+        self.directory_context = directory_context or {}
         self.available_agents = {
             'orchestrator': 'Project Orchestrator - Overall project coordination',
             'research': 'Research Analyst - Information gathering and analysis',
@@ -63,6 +65,16 @@ class InteractiveAgentChat:
         print("="*70)
         print("Welcome to the RSC03 Multi-Agent System!")
         print("Chat directly with 8 specialized AI agents using optimal models.")
+        
+        # Display directory context if available
+        if self.directory_context:
+            print(f"\n📍 Directory Context:")
+            print(f"   Current: {self.directory_context.get('current_dir', 'unknown')}")
+            print(f"   Project: {self.directory_context.get('project_type', 'unknown')}")
+            print(f"   RSC03 Relation: {self.directory_context.get('rsc03_relation', 'unknown')}")
+            if self.directory_context.get('context_hints'):
+                print(f"   💡 {self.directory_context['context_hints'][0]}")
+        
         print("\n📋 Available Commands:")
         print("  /agents     - List all available agents with model info")
         print("  /switch     - Switch to a different agent")
@@ -72,6 +84,8 @@ class InteractiveAgentChat:
         print("  /workflow   - Start a structured workflow")
         print("  /costs      - Show usage and cost summary")
         print("  /models     - Show all model assignments")
+        print("  /context    - Show full directory context")
+        print("  /plans      - List available plans")
         print("  /save       - Save chat session to file")
         print("  /help       - Show this help message")
         print("  /quit       - Exit the chat")
@@ -282,6 +296,195 @@ class InteractiveAgentChat:
                 print("❌ Workflow template not found")
         else:
             print("🚧 Other workflows coming soon!")
+    
+    def display_context(self):
+        """Display full directory context"""
+        if not self.directory_context:
+            print("📍 No directory context available")
+            return
+            
+        print("\n📍 Full Directory Context:")
+        print("-" * 50)
+        print(f"Current Directory: {self.directory_context.get('current_dir', 'unknown')}")
+        print(f"Project Root: {self.directory_context.get('project_root', 'unknown')}")
+        print(f"Project Type: {self.directory_context.get('project_type', 'unknown')}")
+        print(f"RSC03 Relation: {self.directory_context.get('rsc03_relation', 'unknown')}")
+        
+        files = self.directory_context.get('files_present', [])
+        if files:
+            print(f"Key Files: {', '.join(files[:10])}")
+            if len(files) > 10:
+                print(f"   ... and {len(files) - 10} more files")
+        
+        git_info = self.directory_context.get('git_info', {})
+        if git_info.get('is_repo'):
+            print(f"Git Branch: {git_info.get('branch', 'unknown')}")
+            print(f"Git Status: {git_info.get('status', 'unknown')}")
+        
+        hints = self.directory_context.get('context_hints', [])
+        if hints:
+            print("\n💡 Context Hints:")
+            for hint in hints:
+                print(f"   • {hint}")
+    
+    def list_plans(self):
+        """List available plans"""
+        try:
+            from rc_planner import PlanManager
+            plan_manager = PlanManager()
+            plans = plan_manager.list_plans()
+            
+            if not plans:
+                print("📋 No plans found")
+                return
+                
+            print(f"\n📋 Available Plans ({len(plans)}):")
+            print("-" * 50)
+            for plan in plans[:10]:  # Show first 10 plans
+                status_emoji = {"pending": "⏳", "active": "🔄", "completed": "✅", "cancelled": "❌"}.get(plan.get('status', 'unknown'), "❓")
+                print(f"{status_emoji} {plan.get('id', 'unknown')}: {plan.get('title', 'No title')[:50]}")
+                print(f"   Created: {plan.get('created_at', 'unknown')[:19]}")
+                
+            if len(plans) > 10:
+                print(f"   ... and {len(plans) - 10} more plans")
+                
+        except ImportError:
+            print("❌ Plan manager not available")
+        except Exception as e:
+            print(f"❌ Error listing plans: {e}")
+    
+    def start_chat(self):
+        """Start the chat interface"""
+        self.run()
+    
+    def start_chat_with_message(self, initial_message: str):
+        """Start chat with an initial message"""
+        self.display_welcome()
+        
+        # Auto-switch to orchestrator for initial message
+        if not self.current_agent:
+            print("🤖 Auto-switching to Project Orchestrator for initial message...")
+            self.switch_agent('orchestrator')
+        
+        # Process the initial message
+        print(f"\n💬 Processing initial message: {initial_message}")
+        print("-" * 50)
+        
+        # Add to chat history
+        self.chat_history.append({
+            'timestamp': str(datetime.now()),
+            'agent': self.current_agent,
+            'user_message': initial_message,
+            'agent_response': "Initial message processed - ready for interaction"
+        })
+        
+        # Simulate processing the initial message
+        response = self.simulate_agent_response(initial_message)
+        print(f"\n🤖 [{self.current_agent}]: {response}")
+        
+        # Continue with normal chat loop
+        self._continue_chat_loop()
+    
+    def _continue_chat_loop(self):
+        """Continue the chat loop after initial message processing"""
+        while True:
+            try:
+                # Show current agent in prompt
+                agent_prompt = f"[{self.current_agent}]" if self.current_agent else "[no agent]"
+                user_input = input(f"\n{agent_prompt} > ").strip()
+                
+                if not user_input:
+                    continue
+                    
+                # Handle commands and messages (same as run method)
+                if user_input.startswith('/'):
+                    if self._handle_command(user_input):
+                        break  # Exit if quit command
+                else:
+                    # Handle regular message
+                    self._handle_message(user_input)
+                    
+            except KeyboardInterrupt:
+                print("\n\n👋 Chat interrupted. Use /quit to exit properly.")
+                break
+            except EOFError:
+                print("\n\n👋 Goodbye!")
+                break
+    
+    def _handle_command(self, user_input: str) -> bool:
+        """Handle slash commands. Returns True if should exit."""
+        command_parts = user_input[1:].split()
+        command = command_parts[0].lower()
+        
+        if command == 'quit' or command == 'exit':
+            print("\n👋 Goodbye! Thanks for using RSC03 Multi-Agent System!")
+            return True
+            
+        elif command == 'help':
+            self.display_welcome()
+            
+        elif command == 'agents':
+            self.display_agents()
+            
+        elif command == 'switch':
+            if len(command_parts) > 1:
+                self.switch_agent(command_parts[1])
+            else:
+                print("Usage: /switch <agent_name>")
+                self.display_agents()
+                
+        elif command == 'status':
+            self.display_status()
+            
+        elif command == 'history':
+            self.display_history()
+            
+        elif command == 'clear':
+            self.chat_history.clear()
+            print("✅ Chat history cleared.")
+            
+        elif command == 'workflow':
+            self.start_workflow()
+            
+        elif command == 'costs':
+            self.display_costs()
+            
+        elif command == 'models':
+            self.display_models()
+            
+        elif command == 'context':
+            self.display_context()
+            
+        elif command == 'plans':
+            self.list_plans()
+            
+        elif command == 'save':
+            self.save_session()
+            
+        else:
+            print(f"❌ Unknown command: /{command}")
+            print("Type '/help' for available commands.")
+            
+        return False
+    
+    def _handle_message(self, user_input: str):
+        """Handle regular chat messages"""
+        if not self.current_agent:
+            print("❌ Please select an agent first using '/switch <agent>'")
+            print("Type '/agents' to see available agents.")
+            return
+            
+        # Simulate agent response
+        response = self.simulate_agent_response(user_input)
+        print(f"\n🤖 {response}")
+        
+        # Add to history
+        self.chat_history.append({
+            'agent': self.current_agent,
+            'user_message': user_input,
+            'agent_response': response,
+            'timestamp': str(datetime.now())
+        })
             
     def run(self):
         """Main chat loop"""
@@ -296,72 +499,13 @@ class InteractiveAgentChat:
                 if not user_input:
                     continue
                     
-                # Handle commands
+                # Handle commands and messages
                 if user_input.startswith('/'):
-                    command_parts = user_input[1:].split()
-                    command = command_parts[0].lower()
-                    
-                    if command == 'quit' or command == 'exit':
-                        print("\n👋 Goodbye! Thanks for using RSC03 Multi-Agent System!")
-                        break
-                        
-                    elif command == 'help':
-                        self.display_welcome()
-                        
-                    elif command == 'agents':
-                        self.display_agents()
-                        
-                    elif command == 'switch':
-                        if len(command_parts) > 1:
-                            self.switch_agent(command_parts[1])
-                        else:
-                            print("Usage: /switch <agent_name>")
-                            self.display_agents()
-                            
-                    elif command == 'status':
-                        self.display_status()
-                        
-                    elif command == 'history':
-                        self.display_history()
-                        
-                    elif command == 'clear':
-                        self.chat_history.clear()
-                        print("✅ Chat history cleared.")
-                        
-                    elif command == 'workflow':
-                        self.start_workflow()
-                        
-                    elif command == 'costs':
-                        self.display_costs()
-                        
-                    elif command == 'models':
-                        self.display_models()
-                        
-                    elif command == 'save':
-                        self.save_session()
-                        
-                    else:
-                        print(f"❌ Unknown command: /{command}")
-                        print("Type '/help' for available commands.")
-                        
+                    if self._handle_command(user_input):
+                        break  # Exit if quit command
                 else:
-                    # Handle regular chat message
-                    if not self.current_agent:
-                        print("❌ Please select an agent first using '/switch <agent>'")
-                        print("Type '/agents' to see available agents.")
-                        continue
-                        
-                    # Simulate agent response
-                    response = self.simulate_agent_response(user_input)
-                    print(f"\n🤖 {response}")
-                    
-                    # Add to history
-                    self.chat_history.append({
-                        'agent': self.current_agent,
-                        'user_message': user_input,
-                        'agent_response': response,
-                        'timestamp': str(Path(__file__).stat().st_mtime)  # Simple timestamp
-                    })
+                    # Handle regular message
+                    self._handle_message(user_input)
                     
             except KeyboardInterrupt:
                 print("\n\n👋 Goodbye! Thanks for using RSC03 Multi-Agent System!")
